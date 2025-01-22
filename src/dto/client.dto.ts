@@ -27,5 +27,9 @@ export class ClientDto {
     @IsOptional()
     @IsDateString()
     date?: string;  // changed to string for better type handling
+
+    @ApiProperty({ description: 'The token for the client', required: true })
+    @IsString()
+    token: string;
 }
 

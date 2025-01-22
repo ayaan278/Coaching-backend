@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../jwt/auth-guard.jwt';
 import {SessionService} from "../service/session.service";
 import {ClientService} from "../service/client.service";
 import {ClientDto} from "../dto/client.dto";
+import {SessionStatus} from "../enum/session-status.enum";
 
 
 @ApiBearerAuth('jwt')
@@ -40,9 +41,15 @@ export class ClientController {
     }
 
     @Put('/update/session-status')
-    @UseGuards(JwtAuthGuard)
-    async updateSessionStatusByClient(){
-        // use token by client to update session status
+    @ApiParam({ name: 'token', type: String, required: true })
+    @ApiParam({ name: 'status', enum: SessionStatus, required: true })
+    @ApiResponse({ status: 200, description: 'The session status has been successfully updated' })
+    @ApiResponse({ status: 404, description: 'Session not found' })
+    async updateSessionStatusByClientUsingToken(
+        @Param('token') token: string,
+        @Param('status') status: SessionStatus
+    ){
+        return this.clientService.updateSessionStatusByClientUsingToken(token, status);
     }
 
 

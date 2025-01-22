@@ -32,4 +32,20 @@ export class ClientService {
         return await this.clientModel.findOne ({ clientId }).exec();
     }
 
+    async updateSessionStatusByClientUsingToken(token: string, status: SessionStatus): Promise<Session> {
+        const client = await this.clientModel.findOne({
+            token
+        }).exec();
+        if (!client) {
+            throw new NotFoundException('Client not found');
+        }
+        const session = await this.sessionModel.findOne({
+            clientId: client.id
+        }).exec();
+        if (!session) {
+            throw new NotFoundException('Session not found');
+        }
+        session.status = status;
+        return session.save();
+    }
 }
