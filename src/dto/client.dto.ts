@@ -3,51 +3,29 @@ import { ApiProperty } from '@nestjs/swagger';
 
 
 export class ClientDto {
-    @ApiProperty({
-        description: 'The coach id of the session',
-        type: String,
-        required: true,
-    })
+    @ApiProperty({ description: 'The name of the user', required: true })
+    @IsString()
+    @IsNotEmpty()
+    name: string;
+
+    @ApiProperty({ description: 'The email of the user', required: true })
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @ApiProperty({ description: 'The coach id of the session', required: true })
     @IsString()
     @IsNotEmpty()
     coachId: string;
 
-    @ApiProperty({
-        description: 'The user id of the session',
-        type: String,
-        required: true,
-    })
-    @IsEmail()
-    @IsNotEmpty()
-    userId: string;
-
-    @ApiProperty({
-        description: 'The status of the session',
-        type: String,
-        required: false,
-        default: 'active',
-    })
+    @ApiProperty({ description: 'The status of the client', required: false, default: 'active' })
     @IsOptional()
     @IsString()
     status?: string;
 
-    @ApiProperty({
-        description: 'The date the session was created',
-        type: String,
-        required: false,
-        default: new Date().toISOString(),
-    })
+    @ApiProperty({ description: 'The date the client was created', required: false, default: new Date().toISOString() })
     @IsOptional()
     @IsDateString()
-    startTime?: Date;
-
-    @ApiProperty({
-        description: 'The date the session was ended',
-        type: String,
-        required: false,
-        default: new Date().toISOString(),
-    })
-    @IsOptional()
-    @IsDateString()
-    endTime?: Date;
+    date?: string;  // changed to string for better type handling
 }
+

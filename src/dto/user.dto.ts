@@ -78,3 +78,11 @@ export class UserDto {
     @IsString()
     role?: string = 'user';
 }
+
+export class SignInDto {
+    @IsEmail()
+    email: string;
+
+    @IsString()
+    password: string;
+}

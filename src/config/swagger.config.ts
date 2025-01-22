@@ -4,10 +4,10 @@ import * as fs from 'fs';
 export function setupSwagger(app) {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     const config = new DocumentBuilder()
-        .setTitle('Kahunas IO Coaching Backend')
-        .setDescription('Kahunas IO Coaching Backend: ' +
-            'The backend for the Kahunas IO Coaching System, a system that allows users to track ' +
-            'their .')
+        .setTitle('Kahunas IO Coaching Test Backend')
+        .setDescription('The backend for the Kahunas IO Coaching System, a system ' +
+            'with all-in-one coaching platform that gives users their ' +
+            'own branded coaching app in the app stores.')
         .setVersion(packageJson.version)
         .addBearerAuth(
             {

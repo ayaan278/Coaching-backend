@@ -11,7 +11,7 @@ export class Client {
     @Prop({ required: true })
     email: string;
 
-    @Prop({ required: true })
+    @Prop({ required: true, ref: 'User' })
     coachId: string; // Reference to User.
 
     @Prop({ default: [] })

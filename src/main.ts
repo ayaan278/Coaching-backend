@@ -46,7 +46,7 @@ async function bootstrap() {
     app.get(LoggerService).log(`Development Server is running on http://localhost:${PORT}`);
   }
   // Log a message with the custom logger
-  app.get(LoggerService).log('Swagger Documentation is listening on port http://localhost:4000/api');
+  app.get(LoggerService).log(`Swagger Documentation is listening on port http://localhost:${PORT}/api`);
   await app.listen(PORT);
 }
 

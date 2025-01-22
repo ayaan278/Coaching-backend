@@ -1,6 +1,6 @@
-import {BadRequestException, Body, Controller, Get, Param, Post} from '@nestjs/common';
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
-import { UserDto } from '../dto/user.dto';
+import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserDto, SignInDto } from '../dto/user.dto';
 import { LoggerService } from '../config/logger.config';
 import { validate } from 'class-validator';
 import { UserService } from '../service/user.service';
@@ -23,7 +23,7 @@ export class UserController {
         private readonly logger: LoggerService,
     ) {}
 
-    @Post('sign-up/')
+    @Post('sign-up')
     @ApiBody({ type: UserDto })
     async signUp(@Body() profileDto: UserDto): Promise<any> {
         const validationResult = await validate(profileDto);
@@ -35,14 +35,13 @@ export class UserController {
             });
         }
         const user = await this.userService.create(profileDto);
-        return user;
+        return { message: 'User created successfully', user };
     }
 
-    @Post('sign-in/:email/:password')
-    @ApiParam({ name: 'email', required: true })
-    @ApiParam({ name: 'password', required: true })
-    async signIn(@Param('email') email: string, @Param('password') password: string): Promise<any> {
-        const validationResult = await validate({ email, password });
+    @Post('sign-in')
+    @ApiBody({ type: SignInDto })  // API Body expects SignInDto
+    async signIn(@Body() signInDto: SignInDto): Promise<any> {
+        const validationResult = await validate(signInDto);
         if (validationResult.length > 0) {
             throw new BadRequestException({
                 message: validationResult,
@@ -50,11 +49,12 @@ export class UserController {
                 statusCode: 400,
             });
         }
-        const user = await this.userService.validateUser(email, password);
+        const user = await this.userService.validateUser(signInDto.email, signInDto.password);
         if (!user) {
             throw new BadRequestException('Invalid credentials');
         }
-        return this.authService.login(user);
+        const token = await this.authService.login(user);
+        return { message: 'Login successful', token };
     }
 
     @Get('get/:email')
@@ -70,5 +70,4 @@ export class UserController {
         }
         return this.userService.getUser(email);
     }
-
 }
