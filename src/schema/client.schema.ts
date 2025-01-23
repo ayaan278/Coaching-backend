@@ -14,7 +14,7 @@ export class Client {
     @Prop({ required: true, ref: 'User' })
     coachId: string; // Reference to User.
 
-    @Prop({ required: true })
+    @Prop({ required: true, unique: true })
     token: string; // Reference to the client's token.
 
     @Prop({ default: [] })

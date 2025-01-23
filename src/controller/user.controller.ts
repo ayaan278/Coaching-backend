@@ -70,4 +70,18 @@ export class UserController {
         }
         return this.userService.getUser(email);
     }
+
+    @Get('get/id/:id')
+    @ApiParam({ name: 'id', required: true })
+    async getUserById(@Param('id') id: string): Promise<any> {
+        const validationResult = await validate({ id });
+        if (validationResult.length > 0) {
+            throw new BadRequestException({
+                message: validationResult,
+                error: 'Bad Request',
+                statusCode: 400,
+            });
+        }
+        return this.userService.getUserById(id);
+    }
 }

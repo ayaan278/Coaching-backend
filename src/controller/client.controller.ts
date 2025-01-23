@@ -1,7 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
 import {ApiTags, ApiParam, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../jwt/auth-guard.jwt';
-import {SessionService} from "../service/session.service";
 import {ClientService} from "../service/client.service";
 import {ClientDto} from "../dto/client.dto";
 import {SessionStatus} from "../enum/session-status.enum";
@@ -30,7 +29,7 @@ export class ClientController {
     async findOne(@Param('id') id: string) {
         return this.clientService.findClient(id);
     }
-    
+
 
     @Put('update/:id')
     @UseGuards(JwtAuthGuard)
