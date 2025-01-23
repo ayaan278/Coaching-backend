@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
 import {ApiTags, ApiParam, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../jwt/auth-guard.jwt';
 import {SessionService} from "../service/session.service";
@@ -30,17 +30,28 @@ export class ClientController {
     async findOne(@Param('id') id: string) {
         return this.clientService.findClient(id);
     }
+    
 
-    @Get('get/:clientId')
+    @Put('update/:id')
     @UseGuards(JwtAuthGuard)
-    @ApiParam({ name: 'userId', type: String })
-    @ApiResponse({ status: 200, description: 'The Client for the user' })
+    @ApiParam({ name: 'id', type: String })
+    @ApiResponse({ status: 200, description: 'The client has been successfully updated' })
     @ApiResponse({ status: 404, description: 'Client not found' })
-    async findClient(@Param('clientId') clientId: string) {
-        return this.clientService.findClient(clientId);
+    async update(@Param('id') id: string, @Body() clientDto: ClientDto) {
+        return this.clientService.updateClient(id, clientDto);
     }
 
-    @Put('/update/session-status')
+    @Delete('delete/:id')
+    @UseGuards(JwtAuthGuard)
+    @ApiParam({ name: 'id', type: String })
+    @ApiResponse({ status: 200, description: 'The client has been successfully deleted' })
+    @ApiResponse({ status: 404, description: 'Client not found' })
+    async delete(@Param('id') id: string) {
+        return this.clientService.deleteClient(id);
+    }
+
+
+    @Put('/update/session-status-by-client')
     @ApiParam({ name: 'token', type: String, required: true })
     @ApiParam({ name: 'status', enum: SessionStatus, required: true })
     @ApiResponse({ status: 200, description: 'The session status has been successfully updated' })
@@ -51,6 +62,5 @@ export class ClientController {
     ){
         return this.clientService.updateSessionStatusByClientUsingToken(token, status);
     }
-
 
 }

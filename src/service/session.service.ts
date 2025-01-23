@@ -15,6 +15,11 @@ export class SessionService {
 
     async createSession(sessionDto: SessionDto): Promise<Session> {
         try {
+            // Check if the client exists
+            const client = await this.clientService.findClient(sessionDto.clientId);
+            if (!client) {
+                throw new NotFoundException('Client not found');
+            }
             // Create a new session document using the SessionDto
             const createdSession = new this.sessionModel(sessionDto);
 
@@ -42,17 +47,6 @@ export class SessionService {
         return sessions;
     }
 
-    async updateSessionStatus(id: string, sessionId: string, status: SessionStatus): Promise<Session> {
-        const session = await this.sessionModel.findById(sessionId).exec();
-        if (!session) {
-            throw new NotFoundException('Session not found');
-        }
-
-        session.status = status;
-        return session.save();
-    }
-
-
     async findSessionByCoachAndStatus(coachId: string,
                                       status?: SessionStatus): Promise<any> {
         if (!status) {
@@ -76,4 +70,26 @@ export class SessionService {
         }
     }
 
+    async updateSession(id: string, sessionDto: SessionDto): Promise<Session> {
+        try {
+            const session = await this.sessionModel.findByIdAndUpdate
+            (id, sessionDto, { new: true }).exec();
+            if (!session) {
+                throw new NotFoundException('Session not found');
+            }
+            return session;
+        } catch (error) {
+            throw new InternalServerErrorException('Failed to update session');
+        }
+    }
+
+    async deleteSession(id: string): Promise<any> {
+        const session = await this.sessionModel.findByIdAndDelete(id).exec();
+        if (!session) {
+            throw new NotFoundException('Session not found');
+        }
+        return {
+            message: 'Session deleted successfully'
+        }
+    }
 }

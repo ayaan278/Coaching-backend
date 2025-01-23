@@ -32,6 +32,16 @@ export class ClientService {
         return await this.clientModel.findOne ({ clientId }).exec();
     }
 
+    async updateClient(clientId: string, clientDto: ClientDto): Promise<Client> {
+        const client = await this.clientModel.
+        findOneAndUpdate({clientId}, clientDto, {new: true}).exec();
+        if (!client) {
+            throw new NotFoundException('Client not found');
+        }
+        return client;
+
+    }
+
     async updateSessionStatusByClientUsingToken(token: string, status: SessionStatus): Promise<Session> {
         const client = await this.clientModel.findOne({
             token
@@ -48,4 +58,10 @@ export class ClientService {
         session.status = status;
         return session.save();
     }
+
+
+    async deleteClient(clientId: string): Promise<any> {
+        return await this.clientModel.deleteOne({clientId}).exec();
+    }
+
 }

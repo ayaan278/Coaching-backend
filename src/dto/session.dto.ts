@@ -13,6 +13,15 @@ export class SessionDto {
     coachId: string;
 
     @ApiProperty({
+        description: 'The client id of the session',
+        type: String,
+        required: true,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientId: string;
+
+    @ApiProperty({
         description: 'The user id of the session',
         type: String,
         required: true,
@@ -41,4 +50,21 @@ export class SessionDto {
     @IsDateString()
     date?: Date;
 
+    @ApiProperty({
+        description: 'The percentage of the session',
+        type: Number,
+        required: false,
+    })
+    @IsOptional()
+    @IsString()
+    percentageComplete?: number = 0;
+
+    @ApiProperty({
+        description: 'The completion date of the session',
+        type: String,
+        required: false,
+    })
+    @IsOptional()
+    @IsDateString()
+    completionDate?: Date;
 }
